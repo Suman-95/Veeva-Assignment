@@ -3,6 +3,7 @@ package stepdefinitions;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pagePackage.CPHomePage;
@@ -14,6 +15,7 @@ public class StepDefinitions {
     CommonMethods cm=new CommonMethods(driver);
     CPHomePage cph=new CPHomePage(driver);
 
+    @Step("Page is loaded")
     @Given("I load the {string} page")
     public void iLoadThePage(String arg0) throws InterruptedException {
         cm.go_to_url(arg0);
