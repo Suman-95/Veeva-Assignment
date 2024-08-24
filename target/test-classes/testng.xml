@@ -1,0 +1,11 @@
+<suite name="CucumberTestSuite">
+    <listners>
+    <listner class-name="io.qameta.allure.testng.AllureTestNg" />
+    </listners>
+    <test name="CucumberTests">
+        <classes>
+            <class name="runner.TestRunner" />
+        </classes>
+    </test>
+
+</suite>
