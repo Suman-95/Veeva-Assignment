@@ -24,7 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class StepDefinitions {
-    WebDriver driver=DriverHandler.getDriver(FrameworkUtility.getValueFromConfig("browser"));
+    WebDriver driver=DriverHandler.getDriver();
     CommonMethods cm=new CommonMethods(driver);
     CPHomePage cph=new CPHomePage(driver);
     DPTwoHomePage dpt=new DPTwoHomePage(driver);
