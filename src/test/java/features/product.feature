@@ -1,6 +1,6 @@
 Feature: Test Automation of Core and Derived Products Testcases
 
- Scenario Outline: Verify the home page
+ Scenario Outline: Store Men's Product details in .txt file
    Given User triggers URL:"<url>" in Browser
    When User validates presale notification and closes the same
    Then user clicks on "<pageName>" on the Shop Menu
