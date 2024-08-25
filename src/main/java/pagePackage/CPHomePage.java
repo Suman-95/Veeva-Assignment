@@ -8,8 +8,10 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import utility.CommonMethods;
 import utility.DriverHandler;
+import utility.ReportUtility;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ List<WebElement> closeButtonPresale;
 @FindBy(xpath = "//a[@rel='noreferrer']/span[text()='Shop']")
 WebElement shopMenu;
 
-@FindBy(xpath = "//div[contains(@id,'172456007763157-global_nav_4th_pos1')]/../ul/li/a")
+@FindBy(xpath = "//*[@id=\"nba-nav\"]/div[2]/nav/div/nav[1]/ul/li[4]/nav/ul/li[2]/a")
 List<WebElement> shopMenulist;
 @FindBy(xpath = "//div[@data-talos='ddPageSize']/i")
 WebElement maxItemdownArrow;
@@ -47,13 +49,20 @@ WebElement maxPageCountContainer;
 @FindBy(xpath = "//div[@class='pagination-component']//a[@aria-label='next page']")
 WebElement nextPagebuttonAtTop;
 
+@FindBy(xpath = "//div[@class='pagination-component']//a[@aria-label='next page']/..")
+WebElement nextPageLI;
+
 @FindBy(xpath="//div[@class='product-card row']")
 List<WebElement> productsOnEachPage;
+
+String eachPageProductlocator="//div[@class='product-card row']";
 
 
     public void click_logo(){
         click_on_element(nbaLogo);
     }
+
+
     public void close_presale_notification(){
         Boolean isVisisble=isElementVisible(closeButtonPresale);
        if(!isVisisble){
@@ -68,43 +77,54 @@ List<WebElement> productsOnEachPage;
         selectFromList(shopMenulist,"Men's");
     }
 
-    public void change_max_item(String valueToChange){
+    public void change_max_item(String valueToChange) throws InterruptedException {
+        String winhand=get_current_window_handle();
+        switch_to_window(winhand);
         click_on_element(maxItemdownArrow);
         selectFromList(maxItemList,valueToChange);
         isElementVisible(currentPageSize);
     }
 
-    public void storeProductDetails(){
-            int maxPageCount=Integer.parseInt
-                    (maxPageCountContainer.getText().
-                            trim().split("\\s+")[2]);
-        Map<Integer,List<String> > productDetailsMap=new HashMap<Integer,List<String>>();
-            for(int i=0;i<maxPageCount-1;i++){
-                List<String> templist=new ArrayList<String>();
-                for(WebElement ele:productsOnEachPage){
-                    templist.add(ele.findElement(
-                            By.xpath("div/div[@class='spacing']"))
-                            .getText().trim());
-                    templist.add(ele.findElement(
-                                    By.xpath("div/div[@class='product-card-title']"))
-                            .getText().trim());
-                    templist.add(ele.findElement(
-                                    By.xpath("div/div[@class='product-vibrancy-container"))
-                            .getText().trim());
+    public void storeProductDetails() throws InterruptedException, IOException {
+      //  Map<Integer,List<String> > productDetailsMap=new HashMap<Integer,List<String>>();
+        List<List<String>> productDetailsList=new ArrayList<>();
+         int count=0;
+            try{
+               do{
+                List<WebElement> li=find_elements(eachPageProductlocator);
+                System.out.println("List Size is:"+li.size());
+                for(int i=0;i<li.size();i++){
+                    List<String> templist=new ArrayList<String>();
+                    List<WebElement> productDetails=find_elements("//div[@class='columns small-5 medium-12']");
+                    templist.add(productDetails.get(i).getText());
+                   /* System.out.println("Price is:"+ele1);*/
+                    productDetailsList.add(templist);
                 }
-                productDetailsMap.put(i+1,templist);
+                click_on_element(nextPagebuttonAtTop);
+
+            } while(!nextPageLI.getAttribute("class").contains("disabled"));
+            }catch(org.openqa.selenium.ElementClickInterceptedException e){
+                Allure.step("User has reached the last page");
+            }finally{
+                List<WebElement> li=find_elements(eachPageProductlocator);
+                System.out.println("List Size is:"+li.size());
+                for(int i=0;i<li.size();i++){
+                    List<String> templist=new ArrayList<String>();
+                    List<WebElement> productDetails=find_elements("//div[@class='columns small-5 medium-12']");
+                    templist.add(productDetails.get(i).getText());
+                    productDetailsList.add(templist);
+                }
             }
-         String fileName=System.getProperty("user.dir")+"src/test/resources/data.txt";
-         try(BufferedWriter writer=new BufferedWriter(new FileWriter(fileName))){
-             for (Map.Entry<Integer,List<String>> entry:productDetailsMap.entrySet()){
-                 List<String> values=entry.getValue();
-             for(String val:values){
-                 writer.write(val);
-                 writer.newLine();
-             }
-             }
-         } catch (IOException e) {
-             throw new RuntimeException(e);
-         }
+            System.out.println("Final list size:"+productDetailsList.size());
+            System.out.println(productDetailsList.get(0).get(0));
+         String fileName=System.getProperty("user.dir")+"/src/test/resources/data.txt";
+        FileWriter fw=new FileWriter(fileName);
+        for(List<String> li:productDetailsList){
+            fw.write(li.toString()+System.lineSeparator());
+        }
+        fw.close();
+
+        Allure.step("Values are stored in the data.txt file");
+        ReportUtility.addAttachmentToAllure(fileName);
     }
 }

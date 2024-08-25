@@ -62,12 +62,12 @@ public class StepDefinitions {
     }
 
     @And("User changes max item to {string} in men's page")
-    public void userChangesMaxItemToInMenSPage(String value) {
+    public void userChangesMaxItemToInMenSPage(String value) throws InterruptedException {
         cph.change_max_item(value);
     }
 
     @And("user goes to each Page and stores data in text file")
-    public void userGoesToEachPageAndStoresDataInTextFile() {
+    public void userGoesToEachPageAndStoresDataInTextFile() throws InterruptedException, IOException {
         cph.storeProductDetails();
     }
 }
