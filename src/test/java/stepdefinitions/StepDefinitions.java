@@ -13,26 +13,33 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import pagePackage.CPHomePage;
+import pagePackage.CPShopMenPage;
+import pagePackage.DPTwoHomePage;
 import utility.CommonMethods;
 import utility.DriverHandler;
+import utility.FrameworkUtility;
 import utility.ReportUtility;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class StepDefinitions {
-    WebDriver driver=DriverHandler.getDriver();
+    WebDriver driver=DriverHandler.getDriver(FrameworkUtility.getValueFromConfig("browser"));
     CommonMethods cm=new CommonMethods(driver);
     CPHomePage cph=new CPHomePage(driver);
+    DPTwoHomePage dpt=new DPTwoHomePage(driver);
+    CPShopMenPage cpm=new CPShopMenPage(driver);
+
+    public StepDefinitions() throws IOException {
+    }
 
     @Step("Page is loaded")
     @Given("I load the {string} page")
     public void iLoadThePage(String arg0) throws InterruptedException, IOException {
         cm.go_to_url(arg0);
         Thread.sleep(1000);
-
-        cph.click_logo();
     }
+
 
 
     @After
@@ -46,7 +53,7 @@ public class StepDefinitions {
     }
 
     @Given("User triggers URL:{string} in Browser")
-    public void userTriggersURLInBrowser(String url) throws IOException {
+    public void userTriggersURLInBrowser(String url) throws IOException, InterruptedException {
         cm.go_to_url(url);
         cph.close_presale_notification();
     }
@@ -63,11 +70,31 @@ public class StepDefinitions {
 
     @And("User changes max item to {string} in men's page")
     public void userChangesMaxItemToInMenSPage(String value) throws InterruptedException {
-        cph.change_max_item(value);
+        cpm.change_max_item(value);
     }
 
     @And("user goes to each Page and stores data in text file")
     public void userGoesToEachPageAndStoresDataInTextFile() throws InterruptedException, IOException {
-        cph.storeProductDetails();
+        cpm.storeProductDetails();
+    }
+
+    @Then("User goes to newsfeed page")
+    public void userGoesToNewsfeedPage() {
+        cph.gotoNewsFeed();
+    }
+
+    @And("User notes video count for more than three days")
+    public void userNotesVideoCountForMoreThanThreeDays() {
+        cph.validateVideoCount();
+    }
+
+    @When("User goes to page bottom")
+    public void userGoesToPageBottom() {
+    dpt.scrollToPageBottom();
+    }
+
+    @Then("Check duplicates in hyperlinks")
+    public void checkDuplicatesInHyperlinks() {
+    dpt.check_Duplicate_hyperlinks();
     }
 }

@@ -25,8 +25,7 @@ public class CPHomePage extends CommonMethods {
         super(driver);
         PageFactory.initElements(driver,this);
     }
-@FindBy(xpath = "//img[@alt='NBA Logo']")
-    WebElement nbaLogo;
+
 @FindBy(xpath = "//div[text()='x']")
 List<WebElement> closeButtonPresale;
 
@@ -57,11 +56,20 @@ List<WebElement> productsOnEachPage;
 
 String eachPageProductlocator="//div[@class='product-card row']";
 
+@FindBy(xpath = "//button[text()='I Accept']")
+List<WebElement> acceptCookie;
 
-    public void click_logo(){
-        click_on_element(nbaLogo);
-    }
+@FindBy(xpath = "//span[text()='...' and @class!='text-xl']")
+WebElement threeDots;
 
+@FindBy(xpath = "//*[@id=\"nba-nav\"]/div[2]//a[@title='News & Features']")
+List<WebElement> newsFeedoption;
+
+@FindBy(xpath = "//h3[text()='VIDEOS']/../..//ul[@data-testid='content-grid-']/li")
+List<WebElement> allVideos;
+
+@FindBy(xpath = "//h3[text()='VIDEOS']/../..//ul[@data-testid='content-grid-']/li//span[@aria-hidden='true']")
+List<WebElement> videoDurations;
 
     public void close_presale_notification(){
         Boolean isVisisble=isElementVisible(closeButtonPresale);
@@ -70,6 +78,13 @@ String eachPageProductlocator="//div[@class='product-card row']";
        }else{
            click_on_element(closeButtonPresale.get(0));
        }
+       Boolean iscookieVisible=isElementVisible(acceptCookie);
+       if(!iscookieVisible){
+           Allure.step("Cookie option is not available");
+       }else{
+           click_on_element(acceptCookie.get(0));
+       }
+
     }
 
     public void clickValuefromShopMenu(String value){
@@ -77,54 +92,24 @@ String eachPageProductlocator="//div[@class='product-card row']";
         selectFromList(shopMenulist,"Men's");
     }
 
-    public void change_max_item(String valueToChange) throws InterruptedException {
-        String winhand=get_current_window_handle();
-        switch_to_window(winhand);
-        click_on_element(maxItemdownArrow);
-        selectFromList(maxItemList,valueToChange);
-        isElementVisible(currentPageSize);
+    public void gotoNewsFeed(){
+        mouse_hover_on_element(threeDots);
+        selectFromList(newsFeedoption,"News & Features");
     }
 
-    public void storeProductDetails() throws InterruptedException, IOException {
-      //  Map<Integer,List<String> > productDetailsMap=new HashMap<Integer,List<String>>();
-        List<List<String>> productDetailsList=new ArrayList<>();
-         int count=0;
-            try{
-               do{
-                List<WebElement> li=find_elements(eachPageProductlocator);
-                System.out.println("List Size is:"+li.size());
-                for(int i=0;i<li.size();i++){
-                    List<String> templist=new ArrayList<String>();
-                    List<WebElement> productDetails=find_elements("//div[@class='columns small-5 medium-12']");
-                    templist.add(productDetails.get(i).getText());
-                   /* System.out.println("Price is:"+ele1);*/
-                    productDetailsList.add(templist);
+    public void validateVideoCount(){
+        int totalVieoSize=allVideos.size();
+        Allure.step("Total Video Count is:"+(totalVieoSize-1));
+        int videomorethan3d=0;
+        for(WebElement ele:videoDurations){
+            if(ele.getText().contains("d")){
+                if(Integer.parseInt(ele.getText().substring(0,ele.getText().length()-1))>3){
+                    videomorethan3d++;
                 }
-                click_on_element(nextPagebuttonAtTop);
-
-            } while(!nextPageLI.getAttribute("class").contains("disabled"));
-            }catch(org.openqa.selenium.ElementClickInterceptedException e){
-                Allure.step("User has reached the last page");
-            }finally{
-                List<WebElement> li=find_elements(eachPageProductlocator);
-                System.out.println("List Size is:"+li.size());
-                for(int i=0;i<li.size();i++){
-                    List<String> templist=new ArrayList<String>();
-                    List<WebElement> productDetails=find_elements("//div[@class='columns small-5 medium-12']");
-                    templist.add(productDetails.get(i).getText());
-                    productDetailsList.add(templist);
-                }
+            }else{
+                videomorethan3d++;
             }
-            System.out.println("Final list size:"+productDetailsList.size());
-            System.out.println(productDetailsList.get(0).get(0));
-         String fileName=System.getProperty("user.dir")+"/src/test/resources/data.txt";
-        FileWriter fw=new FileWriter(fileName);
-        for(List<String> li:productDetailsList){
-            fw.write(li.toString()+System.lineSeparator());
         }
-        fw.close();
-
-        Allure.step("Values are stored in the data.txt file");
-        ReportUtility.addAttachmentToAllure(fileName);
+        Allure.step("Total Video more than 3d is:"+videomorethan3d);
     }
 }

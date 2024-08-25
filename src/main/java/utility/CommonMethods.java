@@ -95,10 +95,10 @@ wait.until(ExpectedConditions.visibilityOf(ele));
         }
     }
 
-    public void go_to_url(String url){
+    public void go_to_url(String url) throws InterruptedException {
         driver.get(url);
-
     }
+
     public void close_browser(){
         driver.quit();
     }

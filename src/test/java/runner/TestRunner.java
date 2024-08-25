@@ -9,7 +9,8 @@ import org.testng.annotations.Listeners;
         features = "src/test/java/features/",
         glue = {"stepdefinitions"},
         monochrome = true,
-        plugin = {"pretty","io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"}
+        plugin = {"pretty","io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"},
+        tags = "@DerivedProduct2"
 )
 @Listeners({AllureTestNg.class})
 public class TestRunner extends AbstractTestNGCucumberTests {
