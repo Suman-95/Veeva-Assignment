@@ -26,6 +26,13 @@
             <artifactId>cucumber-java</artifactId>
             <version>7.18.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber7-jvm -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId>
+            <version>2.29.0</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-testng -->
         <dependency>
             <groupId>io.cucumber</groupId>
@@ -38,14 +45,6 @@
             <artifactId>allure-testng</artifactId>
             <version>2.29.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber7-jvm -->
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-cucumber7-jvm</artifactId>
-            <version>2.29.0</version>
-        </dependency>
-
-
     </dependencies>
     <build>
         <plugins>
@@ -54,10 +53,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.2</version>
                 <configuration>
-                    <!--<testSourceDirectory>src/test/java/runner</testSourceDirectory>
-                    <includes>
-                        <include>**/*Runner.java</include>
-                    </includes>-->
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
@@ -69,15 +64,6 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>2.13.0</version>
-                <configuration>
-                    <reportDirectory>${project.build.directory}\custom-allure-report</reportDirectory>
-                    <resultsDirectory>${project.build.directory}\custom-allure-results</resultsDirectory>
                 </configuration>
             </plugin>
         </plugins>

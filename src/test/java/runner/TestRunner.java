@@ -8,7 +8,8 @@ import org.testng.annotations.Listeners;
 @CucumberOptions(
         features = "src/test/java/features/",
         glue = {"stepdefinitions"},
-        monochrome = true
+        monochrome = true,
+        plugin = {"pretty","io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"}
 )
 @Listeners({AllureTestNg.class})
 public class TestRunner extends AbstractTestNGCucumberTests {

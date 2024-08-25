@@ -1,14 +1,23 @@
 package stepdefinitions;
 
+import io.cucumber.java.After;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import pagePackage.CPHomePage;
 import utility.CommonMethods;
 import utility.DriverHandler;
+import utility.ReportUtility;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 public class StepDefinitions {
     WebDriver driver=DriverHandler.getDriver();
@@ -17,10 +26,20 @@ public class StepDefinitions {
 
     @Step("Page is loaded")
     @Given("I load the {string} page")
-    public void iLoadThePage(String arg0) throws InterruptedException {
+    public void iLoadThePage(String arg0) throws InterruptedException, IOException {
         cm.go_to_url(arg0);
         Thread.sleep(1000);
         cph.close_presale_notification();
         cph.click_logo();
+    }
+
+    @After
+    public void closeBrowser(Scenario scenario){
+        if(scenario.isFailed()){
+            byte[] screenshot=((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
+            Allure.attachment("Failed Screenshot",new ByteArrayInputStream(screenshot));
+        }
+    cm.close_browser();
+
     }
 }

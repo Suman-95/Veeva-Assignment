@@ -1,3 +1,5 @@
-utility\DriverHandler.class
-utility\CommonMethods.class
+utility\ReportUtility.class
 pagePackage\CPHomePage.class
+utility\DriverHandler.class
+utility\FrameworkUtility.class
+utility\CommonMethods.class
