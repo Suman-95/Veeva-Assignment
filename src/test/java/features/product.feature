@@ -24,7 +24,7 @@ Feature: Test Automation of Core and Derived Products Testcases
 
 
   @DerivedProduct2
-  Scenario Outline: Validate total videos feed count in Core Product
+  Scenario Outline: Validate total Hyperlink count in Derived Product
     Given User triggers URL:"<url>" in Browser
     When User goes to page bottom
     Then Check duplicates in hyperlinks
