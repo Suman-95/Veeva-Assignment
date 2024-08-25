@@ -64,7 +64,7 @@ public class StepDefinitions {
     }
 
     @Then("user clicks on {string} on the Shop Menu")
-    public void userClicksOnOnTheShopMenu(String pageName) {
+    public void userClicksOnOnTheShopMenu(String pageName) throws InterruptedException {
         cph.clickValuefromShopMenu(pageName);
     }
 

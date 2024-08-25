@@ -87,9 +87,10 @@ List<WebElement> videoDurations;
 
     }
 
-    public void clickValuefromShopMenu(String value){
+    public void clickValuefromShopMenu(String value) throws InterruptedException {
         mouse_hover_on_element(shopMenu);
         selectFromList(shopMenulist,"Men's");
+        Thread.sleep(5000);
     }
 
     public void gotoNewsFeed(){
